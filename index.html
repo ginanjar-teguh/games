@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VISUAL CROSS — HTML5</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<section id="welcomeScreen" class="welcome-screen image-welcome" aria-label="Halaman Selamat Datang VISUAL CROSS">
+  <button id="enterGameBtn" class="image-start-hotspot" aria-label="Mulai permainan"></button>
+</section>
+
+<div id="gameShell" class="game-shell game-hidden">
+
+  <header class="topbar preview-topbar">
+    <div class="brand-box">
+      <div class="brand-dkv">DKV</div>
+      <div class="brand-name">VISUAL CROSS</div>
+    </div>
+    <div class="level-title">
+      <div class="level-heading"><span id="levelText">LEVEL 1</span></div>
+      <div class="subject-pill">BASIC DKV</div>
+    </div>
+    
+  </header>
+
+  <nav id="levelNav" class="level-nav" aria-label="Pilih level">
+    <button class="level-btn active" data-level="0">LEVEL 1</button>
+    <button class="level-btn" data-level="1">LEVEL 2</button>
+    <button class="level-btn" data-level="2">LEVEL 3</button>
+    <button class="level-btn" data-level="3">LEVEL 4</button>
+    <button class="level-btn" data-level="4">LEVEL 5</button>
+    <button class="level-btn master" data-level="5">MASTER</button>
+  </nav>
+
+  <section class="game-layout">
+    <div class="left-column">
+      <div class="crossword-card">
+        <div id="crossword" class="crossword" aria-label="Teka-teki silang"></div>
+      </div>
+
+      <div class="clue-card">
+        <div class="clue-label">MENDATAR <span id="directionBadge">•</span></div>
+        <div class="clue-row">
+          <span class="clue-number" id="clueNumber">1</span>
+          <div id="clueText">Pilih salah satu kotak pada crossword.</div>
+          <button id="hintBtn" class="hint-btn">💡 HINT</button>
+        </div>
+      </div>
+
+      <div class="keyboard" id="keyboard"></div>
+    </div>
+
+    <div class="right-column">
+      <div class="letter-wheel" id="letterWheel" aria-label="Huruf jawaban">
+        <button class="shuffle" id="shuffleBtn" aria-label="Acak huruf">↝</button>
+      </div>
+
+      <div class="action-row">
+        <button class="action-btn" id="eraseBtn">⌫<small>HAPUS</small></button>
+        <button class="action-btn" id="checkBtn">✓<small>CEK</small></button>
+      </div>
+
+      <div class="stats-card">
+        <div><span>🏆</span><b>SCORE</b><strong id="score">0</strong></div>
+        <div><span>🎯</span><b>ACCURACY</b><strong id="accuracy">0%</strong></div>
+        <div><span>☷</span><b>CLUE</b><strong id="progress">0/8</strong></div>
+        <div><span>◷</span><b>TIME</b><strong id="time">05:00</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="feedback" class="feedback" aria-live="polite"></div>
+
+  <div id="overlay" class="overlay hidden">
+    <div class="modal">
+      <h2 id="modalTitle">VISUAL CROSS</h2>
+      <p id="modalText"></p>
+      <button id="modalBtn" class="primary-btn">MULAI</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/game.js"></script>
+</body>
+</html>
