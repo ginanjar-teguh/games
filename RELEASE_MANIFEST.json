@@ -1,0 +1,48 @@
+{
+  "name": "VISUAL CROSS",
+  "version": "1.0.13",
+  "release": "Timeout Reset Current Level",
+  "levels": 6,
+  "question_counts": {
+    "LEVEL1": 8,
+    "LEVEL2": 10,
+    "LEVEL3": 10,
+    "LEVEL4": 12,
+    "LEVEL5": 12,
+    "MASTER": 15
+  },
+  "total_questions": 67,
+  "progression": "Level 1 → 2 → 3 → 4 → 5 → Master Cross",
+  "variables": [
+    "V1 Basic DKV",
+    "V2 Visual Design",
+    "V3 Program & Acara Digital",
+    "V4 Production",
+    "V5 Visual Analysis",
+    "MASTER Integration"
+  ],
+  "features": [
+    "Automatic progression",
+    "Exact answer-length cells",
+    "Scrambled letter wheel",
+    "Shuffle",
+    "Hint",
+    "Score",
+    "Accuracy",
+    "Timer",
+    "Responsive",
+    "Level navigation buttons",
+    "Replay completed levels",
+    "DKV geometric dark theme",
+    "Welcome screen before gameplay",
+    "Image-based welcome screen",
+    "Bundled 16:9 DKV welcome artwork",
+    "Preview-inspired gameplay screen",
+    "Removed gem counter",
+    "Removed green gem box",
+    "DKV gameplay branding",
+    "Working welcome start + BGM/audio feedback",
+    "Keyboard press visual feedback",
+    "Timeout clears all answers and restarts current level"
+  ]
+}

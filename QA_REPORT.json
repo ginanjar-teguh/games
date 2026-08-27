@@ -1,0 +1,10 @@
+{
+  "files": [
+    "index.html",
+    "css/style.css",
+    "js/game.js"
+  ],
+  "framework": "Vanilla HTML5/CSS/JS",
+  "responsive": true,
+  "offline": true
+}
