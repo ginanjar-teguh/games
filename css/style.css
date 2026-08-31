@@ -544,3 +544,140 @@ body{min-width:0;overflow-x:hidden}
   .leaderboard-heading strong{font-size:12px}
   .leaderboard-item{min-height:34px}
 }
+
+/* ===== v1.0.17 — RESPONSIVE WELCOME + TOP SCORE ===== */
+.welcome-top-score{
+  position:absolute;z-index:4;
+  top:clamp(14px,3.2vw,34px);left:clamp(14px,3.2vw,42px);
+  display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:10px;
+  width:min(330px,32vw);min-width:250px;padding:10px 12px;
+  border:1px solid rgba(255,255,255,.2);border-radius:16px;
+  background:rgba(7,13,27,.78);backdrop-filter:blur(9px);
+  box-shadow:0 10px 28px rgba(0,0,0,.28);
+  color:#fff;
+}
+.welcome-score-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#f7bd32;color:#172033;font-size:20px}
+.welcome-score-copy{min-width:0;display:flex;flex-direction:column;gap:2px}
+.welcome-score-copy span{font-size:9px;font-weight:900;letter-spacing:1.8px;color:#67e8f9}
+.welcome-score-copy strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.welcome-best-value{color:#f7bd32;font-size:17px;white-space:nowrap}
+
+/* Make the image welcome page adapt by using a real fluid content box rather than a fixed crop. */
+.image-welcome{
+  min-height:100vh;width:100%;display:block;position:relative;overflow:hidden;
+  background:#080d1b url("../assets/welcome-dkv-16x9.jpg") center center/cover no-repeat;
+}
+.image-start-hotspot{
+  position:absolute;left:50%;top:70%;transform:translate(-50%,-50%);
+  width:min(30.5vw,470px);height:min(7.6vw,112px);
+  min-width:220px;min-height:60px;
+  border:0;border-radius:18px;background:transparent;cursor:pointer;
+}
+.image-start-hotspot:hover{background:rgba(247,189,50,.08)}
+.image-start-hotspot:focus-visible{outline:4px solid rgba(247,189,50,.9);outline-offset:3px}
+
+@media(max-width:900px){
+  .image-welcome{background-position:center center}
+  .image-start-hotspot{top:70%;width:48vw;height:11vw;min-width:210px;min-height:58px}
+  .welcome-top-score{width:min(300px,42vw);min-width:220px}
+}
+@media(max-width:600px){
+  .image-welcome{min-height:100vh;background-size:auto 100%;background-position:center center}
+  .welcome-top-score{top:12px;left:12px;right:12px;width:auto;min-width:0;padding:8px 10px;border-radius:13px;grid-template-columns:36px minmax(0,1fr) auto}
+  .welcome-score-icon{width:32px;height:32px;font-size:17px;border-radius:9px}
+  .welcome-score-copy span{font-size:8px}
+  .welcome-score-copy strong{font-size:11px}
+  .welcome-best-value{font-size:14px}
+  .image-start-hotspot{top:69%;width:64vw;height:13vw;min-width:190px;min-height:54px}
+}
+@media(max-width:380px){
+  .welcome-top-score{top:8px;left:8px;right:8px}
+  .welcome-score-copy strong{font-size:10px}
+  .image-start-hotspot{top:68.5%;width:68vw;min-width:180px}
+}
+@media(orientation:landscape) and (max-height:600px) and (max-width:900px){
+  .image-welcome{background-size:cover}
+  .welcome-top-score{top:8px;left:10px;width:250px;padding:7px 9px}
+  .image-start-hotspot{top:70%;width:34vw;height:9vw;min-width:190px;min-height:50px}
+}
+
+/* Leaderboard medals and top-5 celebration */
+.leaderboard-item{position:relative;overflow:hidden;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.leaderboard-item:nth-child(1){border-color:rgba(247,189,50,.72);background:linear-gradient(90deg,rgba(247,189,50,.14),#101b2d)}
+.leaderboard-item:nth-child(2){border-color:rgba(203,213,225,.48)}
+.leaderboard-item:nth-child(3){border-color:rgba(180,120,70,.5)}
+.leaderboard-item.current-player{animation:leaderCurrent .9s ease both}
+.leaderboard-item.rank-up{animation:rankUp .9s cubic-bezier(.2,.8,.2,1) both}
+.rank{font-size:18px}
+@keyframes leaderCurrent{0%{transform:scale(.98);opacity:.5}60%{transform:scale(1.015)}100%{transform:scale(1);opacity:1}}
+@keyframes rankUp{0%{transform:translateX(-18px) scale(.96);opacity:.15}55%{transform:translateX(4px) scale(1.02)}100%{transform:translateX(0) scale(1);opacity:1}}
+@media(prefers-reduced-motion:reduce){.leaderboard-item.current-player,.leaderboard-item.rank-up{animation:none}.leaderboard-item{transition:none}}
+
+/* ===== v1.0.18 — QWERTY KEYBOARD + ACTIONS IN ONE BOX ===== */
+.keyboard-panel{
+  width:min(760px,100%);
+  margin:15px auto 0;
+  padding:clamp(7px,1vw,10px);
+  background:rgba(7,16,30,.72);
+  border:1px solid #26364d;
+  border-radius:15px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:clamp(8px,1vw,12px);
+  align-items:center;
+}
+.keyboard-panel .keyboard{
+  width:100%;
+  margin:0;
+  padding:0;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  display:flex;
+  flex-direction:column;
+  gap:clamp(3px,.55vw,6px);
+}
+.keyboard-row{
+  display:flex;
+  justify-content:center;
+  gap:clamp(3px,.55vw,6px);
+}
+.keyboard-row button{
+  flex:1 1 0;
+  min-width:0;
+  width:auto;
+  height:clamp(36px,4.5vw,44px);
+  padding:0;
+  font-size:clamp(12px,1.7vw,17px);
+}
+.keyboard-row:nth-child(2){padding:0 5%;}
+.keyboard-row:nth-child(3){padding:0 10%;}
+.keyboard-actions{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:clamp(72px,10vw,92px);
+}
+.keyboard-actions .action-btn{
+  width:100%;
+  height:clamp(42px,5vw,52px);
+  margin:0;
+}
+.keyboard-actions .action-btn small{display:block;font-size:9px;line-height:1.1;margin-top:2px;}
+
+@media(max-width:600px){
+  .keyboard-panel{grid-template-columns:minmax(0,1fr) auto;gap:6px;padding:7px;border-radius:12px;}
+  .keyboard-row{gap:3px;}
+  .keyboard-row:nth-child(2){padding:0 4%;}
+  .keyboard-row:nth-child(3){padding:0 8%;}
+  .keyboard-row button{height:clamp(34px,9vw,40px);font-size:clamp(11px,3.5vw,15px);border-radius:6px;}
+  .keyboard-actions{width:clamp(64px,18vw,78px);gap:6px;}
+  .keyboard-actions .action-btn{height:clamp(40px,11vw,48px);font-size:18px;}
+}
+@media(max-width:380px){
+  .keyboard-panel{gap:5px;padding:6px;}
+  .keyboard-actions{width:58px;}
+  .keyboard-actions .action-btn{height:42px;font-size:16px;}
+  .keyboard-actions .action-btn small{font-size:7px;}
+  .keyboard-row button{font-size:12px;}
+}
