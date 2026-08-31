@@ -1,7 +1,7 @@
 {
   "name": "VISUAL CROSS",
-  "version": "1.0.17",
-  "release": "Responsive Welcome + Enhanced Leaderboard",
+  "version": "1.0.19",
+  "release": "Responsive Welcome 2400x1080 + Rules Popup + Wheel Input",
   "levels": 6,
   "question_counts": {
     "LEVEL1": 8,
@@ -53,6 +53,11 @@
     "Responsive image-based welcome screen across desktop, tablet, mobile, and landscape",
     "Welcome-page live top-score display before starting",
     "Leaderboard rank medals for top 3 players",
-    "Top-5 entry animation for new/high-scoring players"
+    "Top-5 entry animation for new/high-scoring players",
+    "Ultrawide 20:9 welcome compatibility including 2400x1080 screens",
+    "Sequential player-name popup followed by rules popup",
+    "Rules popup explains scrambled letter wheel, physical keyboard, and reading clues",
+    "On-screen QWERTY keyboard removed; physical computer keyboard remains supported",
+    "Answer action buttons placed beneath the letter wheel"
   ]
 }

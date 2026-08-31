@@ -25,13 +25,27 @@
     <div class="name-modal-icon">✦</div>
     <h2 id="nameModalTitle">SIAP BERMAIN?</h2>
     <p>Masukkan nama kamu sebelum memulai permainan.</p>
-    <form id="nameForm" novalidate>
+      <form id="nameForm" novalidate>
       <label for="playerNameInput">NAMA PEMAIN</label>
       <input id="playerNameInput" name="playerName" type="text" maxlength="24" autocomplete="name"
-             placeholder="Contoh: Ginanjar" required>
+             placeholder="Contoh: Ranger Putih" required>
       <div id="nameError" class="name-error" aria-live="polite"></div>
-      <button id="startWithNameBtn" class="primary-btn" type="submit">MULAI GAME ▶</button>
+      <button id="startWithNameBtn" class="primary-btn" type="submit">LANJUT ▶</button>
     </form>
+  </div>
+</div>
+
+<!-- Popup aturan main: muncul setelah nama valid dimasukkan -->
+<div id="rulesOverlay" class="overlay hidden" aria-hidden="true">
+  <div class="modal rules-modal" role="dialog" aria-modal="true" aria-labelledby="rulesModalTitle">
+    <div class="rules-modal-icon">📜</div>
+    <h2 id="rulesModalTitle">ATURAN MAIN</h2>
+    <div class="rules-list">
+      <p><span>①</span><b>Gunakan Lingkaran Huruf Acak</b> untuk mengetik jawaban.</p>
+      <p><span>②</span>Jika menggunakan komputer, kamu bisa langsung menggunakan <b>keyboard komputer</b>.</p>
+      <p><span>③</span><b>Baca Soal</b> dengan teliti untuk membantu menemukan jawaban.</p>
+    </div>
+    <button id="startFromRulesBtn" class="primary-btn" type="button">MULAI PERMAINAN ▶</button>
   </div>
 </div>
 
@@ -76,9 +90,8 @@
         </div>
       </div>
 
-      <div class="keyboard-panel" aria-label="Keyboard permainan">
-        <div class="keyboard" id="keyboard"></div>
-        <div class="keyboard-actions" aria-label="Aksi jawaban">
+      <div class="wheel-controls" aria-label="Kontrol lingkaran huruf">
+        <div class="wheel-actions" aria-label="Aksi jawaban">
           <button class="action-btn" id="eraseBtn" type="button">⌫<small>HAPUS</small></button>
           <button class="action-btn" id="checkBtn" type="button">✓<small>CEK</small></button>
         </div>

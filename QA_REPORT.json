@@ -7,9 +7,14 @@
   "framework": "Vanilla HTML5/CSS/JS",
   "responsive": true,
   "offline": true,
-  "version": "1.0.17",
+  "version": "1.0.19",
   "responsive_welcome": true,
   "leaderboard_medals": true,
   "top5_animation": true,
-  "welcome_top_score": true
+  "welcome_top_score": true,
+  "welcome_2400x1080": true,
+  "rules_popup": true,
+  "onscreen_keyboard_removed": true,
+  "physical_keyboard_supported": true,
+  "wheel_only_mobile_input": true
 }
