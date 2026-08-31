@@ -109,6 +109,7 @@ const LEVELS_DATA=[
   if(playerDisplay) playerDisplay.textContent=this.playerName;
   this.renderKeyboard();this.bind();this.bindLevelButtons();this.loadLevel();
   this.renderLeaderboard();
+  renderWelcomeTopScore();
  }
  updateLevelButtons(){
   document.querySelectorAll(".level-btn").forEach((b,i)=>{
@@ -318,22 +319,30 @@ const LEVELS_DATA=[
  updateStats(){document.getElementById("score").textContent=this.score;document.getElementById("accuracy").textContent=(this.attempts?Math.round(this.correct/this.attempts*100):0)+"%";document.getElementById("progress").textContent=`${this.correct}/${this.words.length}`}
  renderKeyboard(){
   const el=document.getElementById("keyboard");
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(ch=>{
-    const b=document.createElement("button");
-    b.textContent=ch;
-    b.dataset.key=ch;
+  el.innerHTML="";
+  const rows=["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
+  rows.forEach(row=>{
+    const rowEl=document.createElement("div");
+    rowEl.className="keyboard-row";
+    row.split("").forEach(ch=>{
+      const b=document.createElement("button");
+      b.type="button";
+      b.textContent=ch;
+      b.dataset.key=ch;
 
-    // Efek tombol ditekan dengan mouse/touch.
-    b.addEventListener("pointerdown",()=>{
-      b.classList.add("key-pressed");
-      playSound("click");
-    });
-    ["pointerup","pointercancel","pointerleave"].forEach(evt=>{
-      b.addEventListener(evt,()=>b.classList.remove("key-pressed"));
-    });
+      // Efek tombol ditekan dengan mouse/touch.
+      b.addEventListener("pointerdown",()=>{
+        b.classList.add("key-pressed");
+        playSound("click");
+      });
+      ["pointerup","pointercancel","pointerleave"].forEach(evt=>{
+        b.addEventListener(evt,()=>b.classList.remove("key-pressed"));
+      });
 
-    b.onclick=()=>this.type(ch);
-    el.appendChild(b);
+      b.onclick=()=>this.type(ch);
+      rowEl.appendChild(b);
+    });
+    el.appendChild(rowEl);
   });
 }
  bindLevelButtons(){
@@ -441,7 +450,15 @@ const LEVELS_DATA=[
   const limited=board.slice(0,5);
   try{localStorage.setItem("visualCrossLeaderboard",JSON.stringify(limited));}catch(e){}
   this.renderLeaderboard();
+  renderWelcomeTopScore();
   const rank=limited.findIndex(x=>x.name===entry.name&&x.score===entry.score&&x.accuracy===entry.accuracy)+1;
+  if(rank>0 && rank<=5){
+    setTimeout(()=>{
+      const list=document.getElementById("leaderboardList");
+      const row=list?.children?.[rank-1];
+      if(row){row.classList.add("rank-up");setTimeout(()=>row.classList.remove("rank-up"),950)}
+    },50);
+  }
   return rank;
  }
  renderLeaderboard(){
@@ -456,12 +473,21 @@ const LEVELS_DATA=[
     list.appendChild(empty);
     return;
   }
+  const medals=["🥇","🥈","🥉"];
   board.forEach((entry,i)=>{
     const li=document.createElement("li");
     li.className=`leaderboard-item ${entry.name===this.playerName?"current-player":""}`;
-    li.innerHTML=`<span class="rank">${i+1}</span><span class="leader-name" title="${entry.name.replace(/"/g,"&quot;")}">${entry.name.replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]))}</span><span class="leader-score">${entry.score.toLocaleString("id-ID")}</span>`;
+    const medal=medals[i]||`${i+1}.`;
+    li.innerHTML=`<span class="rank" aria-label="Peringkat ${i+1}">${medal}</span><span class="leader-name" title="${entry.name.replace(/"/g,"&quot;")}">${entry.name.replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]))}</span><span class="leader-score">${entry.score.toLocaleString("id-ID")}</span>`;
     list.appendChild(li);
   });
+  if(this.playerName){
+    const mine=[...list.children].find(li=>li.classList.contains("current-player"));
+    if(mine && !window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches){
+      mine.classList.add("rank-up");
+      setTimeout(()=>mine.classList.remove("rank-up"),950);
+    }
+  }
  }
  showFinalLeaderboard(rank){
   const btn=document.getElementById("modalBtn");
@@ -476,6 +502,27 @@ const LEVELS_DATA=[
  }
  msg(text,type){const el=document.getElementById("feedback");el.textContent=text;el.className=`feedback show ${type}`;clearTimeout(this.msgTimer);this.msgTimer=setTimeout(()=>el.className="feedback",2200)}
 }
+function renderWelcomeTopScore(){
+  const nameEl=document.getElementById("welcomeBestName");
+  const scoreEl=document.getElementById("welcomeBestScore");
+  if(!nameEl||!scoreEl)return;
+  let board=[];
+  try{
+    const raw=localStorage.getItem("visualCrossLeaderboard");
+    const data=raw?JSON.parse(raw):[];
+    if(Array.isArray(data)) board=data.filter(x=>x&&typeof x.name==="string"&&Number.isFinite(Number(x.score)))
+      .map(x=>({name:x.name,score:Number(x.score)}))
+      .sort((a,b)=>b.score-a.score);
+  }catch(e){}
+  if(board.length){
+    nameEl.textContent=board[0].name;
+    scoreEl.textContent=board[0].score.toLocaleString("id-ID");
+  }else{
+    nameEl.textContent="Belum ada pemain";
+    scoreEl.textContent="0";
+  }
+}
+
 window.addEventListener("DOMContentLoaded",()=>{
   const welcome=document.getElementById("welcomeScreen");
   const shell=document.getElementById("gameShell");
@@ -484,6 +531,7 @@ window.addEventListener("DOMContentLoaded",()=>{
   const nameForm=document.getElementById("nameForm");
   const nameInput=document.getElementById("playerNameInput");
   const nameError=document.getElementById("nameError");
+  renderWelcomeTopScore();
   if(!welcome || !shell || !enter || !nameOverlay || !nameForm || !nameInput) return;
 
   let started=false;
