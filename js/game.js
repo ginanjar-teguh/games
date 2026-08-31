@@ -102,9 +102,13 @@ const LEVELS_DATA=[
 {id:15,answer:"RULEOFTHIRDS",clue:"Subjek ditempatkan pada titik perpotongan pembagian sepertiga frame.",hint:"Prinsip komposisi sepertiga."}
 ]}
 ];class VisualCross{
- constructor(){
+ constructor(playerName="Pemain") {
+  this.playerName = playerName;
   this.size=15;this.levelIndex=0;this.score=0;this.gems=250;this.correct=0;this.attempts=0;this.totalCorrect=0;this.totalAttempts=0;this.active=null;this.pos=0;this.remaining=300;this.letters={};
+  const playerDisplay=document.getElementById("playerNameDisplay");
+  if(playerDisplay) playerDisplay.textContent=this.playerName;
   this.renderKeyboard();this.bind();this.bindLevelButtons();this.loadLevel();
+  this.renderLeaderboard();
  }
  updateLevelButtons(){
   document.querySelectorAll(".level-btn").forEach((b,i)=>{
@@ -227,17 +231,23 @@ const LEVELS_DATA=[
     })) angles.push(candidate);
   }
   if(angles.length<n) angles=Array.from({length:n},(_,i)=>-90+(360*i/n)).sort(()=>Math.random()-.5);
-  const radiusBase=n<=5?72:n<=7?78:n<=9?84:91;
+  const wheelSize=wheel.clientWidth || 290;
+  const radiusBase=Math.max(52, Math.min(92, wheelSize*0.32 + Math.max(0, n-8)*1.2));
+  const letterSize=n>=11?Math.max(22, wheelSize*0.093):n>=9?Math.max(25, wheelSize*0.107):Math.max(28, wheelSize*0.13);
+  const buttonSize=Math.max(34, Math.min(48, wheelSize*0.16));
   letters.forEach((ch,i)=>{
     const b=document.createElement("button");
     b.className="wheel-letter";
     b.textContent=ch;
-    b.dataset.index=i; b.style.fontSize=n>=11?"27px":n>=9?"31px":"38px";
-    const radius=radiusBase+(Math.random()*26-13);
+    b.dataset.index=i;
+    b.style.fontSize=`${Math.round(letterSize)}px`;
+    b.style.width=`${Math.round(buttonSize)}px`;
+    b.style.height=`${Math.round(buttonSize*1.18)}px`;
+    const radius=radiusBase+(Math.random()*Math.min(26,wheelSize*0.09)-Math.min(13,wheelSize*0.045));
     const angle=angles[i]*Math.PI/180;
     const x=Math.cos(angle)*radius, y=Math.sin(angle)*radius;
-    b.style.left=`calc(50% + ${x}px - 22px)`;
-    b.style.top=`calc(50% + ${y}px - 28px)`;
+    b.style.left=`calc(50% + ${x}px - ${buttonSize/2}px)`;
+    b.style.top=`calc(50% + ${y}px - ${buttonSize*0.59}px)`;
     b.style.transform=`rotate(${Math.round(Math.random()*50-25)}deg)`;
     b.onclick=()=>this.type(ch);
     wheel.appendChild(b);
@@ -277,7 +287,17 @@ const LEVELS_DATA=[
 	playSound("correct");
    this.correct++;this.score+=100;this.msg(`✓ BENAR — ${answer}`,"good");this.updateStats();
    const i=this.words.indexOf(this.active);
-   if(i<this.words.length-1)setTimeout(()=>this.select(this.words[i+1]),650);else setTimeout(()=>this.finish(),900);
+   if(i<this.words.length-1){
+     setTimeout(()=>this.select(this.words[i+1]),650);
+   }else if(this.isLevelComplete()){
+     setTimeout(()=>this.finish(),900);
+   }else{
+     setTimeout(()=>{
+       const nextUnanswered=this.words.find(w=>!this.isWordCorrect(w));
+       if(nextUnanswered)this.select(nextUnanswered);
+       this.msg("Masih ada kolom yang belum terjawab. Lengkapi semuanya untuk lanjut level.","bad");
+     },650);
+   }
   }else{
    playSound("wrong");
    this.msg("✕ Belum tepat. Ulangi dalam 3 detik.","bad");
@@ -288,7 +308,14 @@ const LEVELS_DATA=[
  shuffle(){
   this.renderWheel();
   this.msg("↝ Huruf diacak ulang.","good");
- } updateStats(){document.getElementById("score").textContent=this.score;document.getElementById("accuracy").textContent=(this.attempts?Math.round(this.correct/this.attempts*100):0)+"%";document.getElementById("progress").textContent=`${this.correct}/${this.words.length}`}
+ }
+ isWordCorrect(word){
+   return this.cells(word).map(x=>this.letters[`${x[0]},${x[1]}`]||"").join("")===word.answer;
+ }
+ isLevelComplete(){
+   return this.words.length>0 && this.words.every(w=>this.isWordCorrect(w));
+ }
+ updateStats(){document.getElementById("score").textContent=this.score;document.getElementById("accuracy").textContent=(this.attempts?Math.round(this.correct/this.attempts*100):0)+"%";document.getElementById("progress").textContent=`${this.correct}/${this.words.length}`}
  renderKeyboard(){
   const el=document.getElementById("keyboard");
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(ch=>{
@@ -372,7 +399,14 @@ const LEVELS_DATA=[
   this.timer();
  }
  finish(){
-	 playSound("levelComplete");
+  if(!this.isLevelComplete()){
+    const remaining=this.words.filter(w=>!this.isWordCorrect(w)).length;
+    this.msg(`⚠️ Masih ada ${remaining} kolom yang belum terjawab.`,"bad");
+    const nextUnanswered=this.words.find(w=>!this.isWordCorrect(w));
+    if(nextUnanswered)this.select(nextUnanswered);
+    return;
+  }
+  playSound("levelComplete");
   clearInterval(this.timerId);
   this.totalCorrect+=this.correct;
   this.totalAttempts+=this.attempts;
@@ -382,9 +416,63 @@ const LEVELS_DATA=[
     setTimeout(()=>{this.levelIndex++;this.loadLevel()},1800);
   }else{
     const accuracy=this.totalAttempts?Math.round(this.totalCorrect/this.totalAttempts*100):0;
+    const rank=this.saveLeaderboardScore(this.playerName,this.score,accuracy);
     this.msg(`🏆 MASTER CROSS SELESAI — ${accuracy}% akurasi`,"good");
     document.getElementById("progress").textContent=`${this.correct}/${this.words.length}`;
+    this.showFinalLeaderboard(rank);
   }
+ }
+ getLeaderboard(){
+  try{
+    const raw=localStorage.getItem("visualCrossLeaderboard");
+    const data=raw?JSON.parse(raw):[];
+    if(!Array.isArray(data)) return [];
+    return data.filter(x=>x&&typeof x.name==="string"&&Number.isFinite(Number(x.score)))
+      .map(x=>({name:x.name,score:Number(x.score),accuracy:Number(x.accuracy)||0}))
+      .sort((a,b)=>b.score-a.score || b.accuracy-a.accuracy)
+      .slice(0,5);
+  }catch(e){return []}
+ }
+ saveLeaderboardScore(name,score,accuracy){
+  const board=this.getLeaderboard();
+  const entry={name:String(name).trim().slice(0,24)||"Pemain",score:Math.max(0,Number(score)||0),accuracy:Math.max(0,Math.min(100,Number(accuracy)||0))};
+  board.push(entry);
+  board.sort((a,b)=>b.score-a.score || b.accuracy-a.accuracy);
+  const limited=board.slice(0,5);
+  try{localStorage.setItem("visualCrossLeaderboard",JSON.stringify(limited));}catch(e){}
+  this.renderLeaderboard();
+  const rank=limited.findIndex(x=>x.name===entry.name&&x.score===entry.score&&x.accuracy===entry.accuracy)+1;
+  return rank;
+ }
+ renderLeaderboard(){
+  const list=document.getElementById("leaderboardList");
+  if(!list)return;
+  const board=this.getLeaderboard();
+  list.innerHTML="";
+  if(!board.length){
+    const empty=document.createElement("li");
+    empty.className="leaderboard-empty";
+    empty.textContent="Belum ada skor. Jadilah yang pertama!";
+    list.appendChild(empty);
+    return;
+  }
+  board.forEach((entry,i)=>{
+    const li=document.createElement("li");
+    li.className=`leaderboard-item ${entry.name===this.playerName?"current-player":""}`;
+    li.innerHTML=`<span class="rank">${i+1}</span><span class="leader-name" title="${entry.name.replace(/"/g,"&quot;")}">${entry.name.replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]))}</span><span class="leader-score">${entry.score.toLocaleString("id-ID")}</span>`;
+    list.appendChild(li);
+  });
+ }
+ showFinalLeaderboard(rank){
+  const btn=document.getElementById("modalBtn");
+  const title=document.getElementById("modalTitle");
+  const text=document.getElementById("modalText");
+  const overlay=document.getElementById("overlay");
+  if(!overlay||!title||!text)return;
+  title.textContent=rank>0?`🏆 PERINGKAT #${rank}`:"HASIL PERMAINAN";
+  text.textContent=rank>0?`${this.playerName}, skor kamu masuk TOP 5 leaderboard!`:`${this.playerName}, permainan selesai.`;
+  if(btn){btn.textContent="TUTUP";btn.onclick=()=>overlay.classList.add("hidden");}
+  overlay.classList.remove("hidden");
  }
  msg(text,type){const el=document.getElementById("feedback");el.textContent=text;el.className=`feedback show ${type}`;clearTimeout(this.msgTimer);this.msgTimer=setTimeout(()=>el.className="feedback",2200)}
 }
@@ -392,18 +480,58 @@ window.addEventListener("DOMContentLoaded",()=>{
   const welcome=document.getElementById("welcomeScreen");
   const shell=document.getElementById("gameShell");
   const enter=document.getElementById("enterGameBtn");
-  if(!welcome || !shell || !enter) return;
+  const nameOverlay=document.getElementById("nameOverlay");
+  const nameForm=document.getElementById("nameForm");
+  const nameInput=document.getElementById("playerNameInput");
+  const nameError=document.getElementById("nameError");
+  if(!welcome || !shell || !enter || !nameOverlay || !nameForm || !nameInput) return;
 
   let started=false;
+
+  const openNamePopup=()=>{
+    nameOverlay.classList.remove("hidden");
+    nameOverlay.setAttribute("aria-hidden","false");
+    nameInput.value="";
+    if(nameError) nameError.textContent="";
+    requestAnimationFrame(()=>nameInput.focus());
+  };
+
   enter.addEventListener("click",()=>{
+    if(started)return;
+    openNamePopup();
+  });
+
+  nameForm.addEventListener("submit",(event)=>{
+    event.preventDefault();
+    const playerName=nameInput.value.trim().replace(/\s+/g," ");
+
+    if(playerName.length<2){
+      if(nameError) nameError.textContent="Nama minimal 2 karakter.";
+      nameInput.focus();
+      return;
+    }
+
+    if(playerName.length>24){
+      if(nameError) nameError.textContent="Nama maksimal 24 karakter.";
+      nameInput.focus();
+      return;
+    }
+
     if(started)return;
     started=true;
     startBGM();
+    nameOverlay.classList.add("hidden");
+    nameOverlay.setAttribute("aria-hidden","true");
     welcome.classList.add("welcome-exit");
+
     setTimeout(()=>{
       welcome.style.display="none";
       shell.classList.remove("game-hidden");
-      new VisualCross();
+      new VisualCross(playerName);
     },320);
+  });
+
+  nameInput.addEventListener("input",()=>{
+    if(nameError) nameError.textContent="";
   });
 });
