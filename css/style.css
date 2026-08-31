@@ -405,3 +405,142 @@ body{
   box-shadow:0 1px 0 rgba(0,0,0,.18);
   background:#e5e7eb;
 }
+
+/* ===== v1.0.12 — TRUE RESPONSIVE LAYOUT ===== */
+html{overflow-x:hidden}
+body{min-width:0;overflow-x:hidden}
+.game-shell{width:100%;max-width:1180px;padding:clamp(8px,2vw,16px) clamp(8px,2.2vw,20px) 24px}
+.preview-topbar{display:grid;grid-template-columns:minmax(150px,1fr) auto minmax(150px,1fr);width:100%;min-height:72px;height:auto}
+.level-title{min-width:0}
+.brand-box{max-width:100%;min-width:0}
+.brand-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.level-nav{width:100%;max-width:100%;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.level-btn{flex:0 0 auto}
+.game-layout{grid-template-columns:minmax(0,1fr) minmax(270px,340px);width:100%;gap:clamp(12px,2vw,22px)}
+.crossword-card{width:100%;min-width:0;min-height:0;padding:clamp(8px,1.5vw,18px);overflow:hidden}
+.crossword{width:min(100%,620px);height:auto;aspect-ratio:1/1;grid-template-columns:repeat(15,minmax(0,1fr));grid-template-rows:repeat(15,minmax(0,1fr));gap:clamp(1px,.35vw,3px);margin:auto}
+.cell{min-width:0;min-height:0;font-size:clamp(8px,1.8vw,20px);border-radius:clamp(3px,.45vw,6px)}
+.cell .num{font-size:clamp(5px,.65vw,8px);top:1px;left:2px}
+.right-column{min-width:0;width:100%}
+.letter-wheel{width:min(290px,100%);height:auto;aspect-ratio:1;margin-left:auto;margin-right:auto}
+.keyboard{width:100%;grid-template-columns:repeat(10,minmax(0,1fr));gap:clamp(3px,.55vw,6px);padding:clamp(6px,1vw,10px)}
+.keyboard button{min-width:0;width:100%;height:clamp(36px,4.5vw,44px);padding:0;font-size:clamp(12px,1.7vw,17px)}
+.clue-row{min-width:0}.clue-row #clueText{min-width:0;overflow-wrap:anywhere}
+.stats-card{max-width:100%}
+.feedback{max-width:calc(100vw - 24px);text-align:center}
+
+@media(max-width:900px){
+  .preview-topbar{grid-template-columns:1fr auto;height:auto;min-height:64px}
+  .level-title{grid-column:1/-1;grid-row:2;padding:4px 0 8px}
+  .game-layout{grid-template-columns:1fr}
+  .right-column{display:grid;grid-template-columns:minmax(190px,1fr) minmax(190px,1fr);align-items:center;gap:12px}
+  .letter-wheel{grid-column:1;grid-row:1;max-width:260px}
+  .action-row{grid-column:2;grid-row:1;justify-content:center;align-self:center;flex-wrap:wrap}
+  .stats-card{grid-column:1/-1;grid-row:2;width:100%}
+}
+
+@media(max-width:600px){
+  .game-shell{padding:6px 6px 18px}
+  .preview-topbar{grid-template-columns:minmax(0,1fr) auto;min-height:58px}
+  .brand-box{width:auto;max-width:55vw}.brand-dkv{flex:0 0 auto}
+  .level-title{padding-top:2px}
+  .level-heading{font-size:clamp(14px,4.5vw,20px);padding:0 22px}
+  .level-heading:before,.level-heading:after{width:14px}
+  .level-title .subject-pill{font-size:clamp(11px,3.4vw,15px);max-width:90vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .level-nav{margin:2px auto 8px;padding:5px;gap:5px;border-radius:12px}
+  .level-btn{min-width:88px;padding:8px 9px;font-size:10px}
+  .crossword-card{padding:6px;border-radius:12px}
+  .crossword{width:100%;max-width:560px}
+  .cell{font-size:clamp(7px,3.2vw,14px)}
+  .cell .num{font-size:5px}
+  .clue-card{padding:11px 12px}
+  .clue-row{grid-template-columns:28px minmax(0,1fr)}
+  .hint-btn{grid-column:1/-1;width:100%}
+  .right-column{grid-template-columns:1fr;gap:10px}
+  .letter-wheel{grid-column:1;grid-row:1;width:min(72vw,240px);max-width:240px}
+  .action-row{grid-column:1;grid-row:2;width:100%;justify-content:center}
+  .stats-card{grid-column:1;grid-row:3}
+  .action-btn{width:clamp(82px,27vw,100px);height:58px}
+  .keyboard{grid-template-columns:repeat(9,minmax(0,1fr));gap:4px;padding:7px}
+  .keyboard button{height:clamp(34px,9vw,40px);font-size:clamp(11px,3.5vw,15px);border-radius:6px}
+}
+
+@media(max-width:380px){
+  .brand-name{display:none}
+  .keyboard{grid-template-columns:repeat(8,minmax(0,1fr))}
+  .level-btn{min-width:82px}
+  .clue-label{font-size:14px}
+  .clue-row{font-size:13px}
+}
+
+@media(orientation:landscape) and (max-height:600px) and (max-width:900px){
+  .preview-topbar{min-height:54px}
+  .level-title{grid-column:2;grid-row:1;padding:0}
+  .game-layout{grid-template-columns:minmax(0,1fr) 250px}
+  .right-column{display:flex}
+  .letter-wheel{width:min(210px,42vh)}
+  .stats-card{width:100%}
+  .crossword-card{padding:4px}
+}
+
+/* ===== v1.0.15 — NAMA PEMAIN VIA POPUP ===== */
+.player-box{
+  justify-self:end;
+  min-width:150px;
+  max-width:220px;
+  padding:8px 12px;
+  border:1px solid rgba(148,163,184,.28);
+  border-radius:12px;
+  background:rgba(7,16,30,.78);
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:2px;
+  overflow:hidden;
+}
+.player-label{font-size:9px;font-weight:900;letter-spacing:1.5px;color:#94a3b8}
+.player-box strong{font-size:14px;color:#f7bd32;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.name-modal{width:min(420px,92%);padding:30px 28px 26px}
+.name-modal-icon{width:52px;height:52px;margin:0 auto 10px;border-radius:15px;display:grid;place-items:center;background:#f7bd32;color:#172033;font-size:24px;font-weight:1000;transform:rotate(-5deg)}
+.name-modal h2{margin:8px 0 8px;color:#172033}
+.name-modal p{margin:0 0 20px;color:#64748b;font-size:14px;line-height:1.5}
+.name-modal form{text-align:left}
+.name-modal label{display:block;margin-bottom:7px;font-size:11px;font-weight:900;letter-spacing:1px;color:#334155}
+.name-modal input{width:100%;height:48px;border:2px solid #cbd5e1;border-radius:11px;padding:0 14px;font-size:16px;color:#172033;outline:none}
+.name-modal input:focus{border-color:#f7bd32;box-shadow:0 0 0 3px rgba(247,189,50,.2)}
+.name-error{min-height:18px;margin-top:6px;color:#b42318;font-size:12px;font-weight:700}
+.name-modal .primary-btn{width:100%;margin-top:5px;min-height:46px}
+@media(max-width:600px){
+  .player-box{min-width:100px;max-width:42vw;padding:6px 9px}
+  .player-label{font-size:8px}
+  .player-box strong{font-size:12px}
+  .name-modal{padding:24px 18px 20px}
+}
+
+
+/* ===== v1.0.16 — PERSISTENT LEADERBOARD ===== */
+.leaderboard-card{
+  width:100%;
+  margin-top:10px;
+  padding:14px;
+  background:rgba(7,16,30,.94);
+  border:1px solid #26364d;
+  border-radius:14px;
+  box-shadow:0 10px 25px rgba(0,0,0,.20);
+}
+.leaderboard-heading{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.leaderboard-heading>div:first-child{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;background:#f7bd32;color:#172033;font-size:20px}
+.leaderboard-heading strong{display:block;color:#f8fafc;font-size:13px;letter-spacing:.8px}
+.leaderboard-heading span{display:block;margin-top:2px;color:#94a3b8;font-size:9px;font-weight:800;letter-spacing:.8px}
+.leaderboard-list{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.leaderboard-item{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:8px;min-height:36px;padding:6px 8px;border:1px solid rgba(71,85,105,.35);border-radius:9px;background:#101b2d}
+.leaderboard-item.current-player{border-color:rgba(247,189,50,.75);background:rgba(247,189,50,.09)}
+.rank{font-weight:1000;color:#f7bd32;text-align:center}
+.leader-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#e2e8f0;font-size:11px;font-weight:800}
+.leader-score{color:#f7bd32;font-size:12px;font-weight:1000}
+.leaderboard-empty{padding:12px 6px;text-align:center;color:#64748b;font-size:10px}
+@media(max-width:600px){
+  .leaderboard-card{padding:11px;margin-top:8px}
+  .leaderboard-heading strong{font-size:12px}
+  .leaderboard-item{min-height:34px}
+}
