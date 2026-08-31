@@ -11,6 +11,22 @@
   <button id="enterGameBtn" class="image-start-hotspot" aria-label="Mulai permainan"></button>
 </section>
 
+<!-- Popup nama pemain: muncul setelah tombol MULAI PERMAINAN ditekan -->
+<div id="nameOverlay" class="overlay hidden" aria-hidden="true">
+  <div class="modal name-modal" role="dialog" aria-modal="true" aria-labelledby="nameModalTitle">
+    <div class="name-modal-icon">✦</div>
+    <h2 id="nameModalTitle">SIAP BERMAIN?</h2>
+    <p>Masukkan nama kamu sebelum memulai permainan.</p>
+    <form id="nameForm" novalidate>
+      <label for="playerNameInput">NAMA PEMAIN</label>
+      <input id="playerNameInput" name="playerName" type="text" maxlength="24" autocomplete="name"
+             placeholder="Contoh: Ginanjar" required>
+      <div id="nameError" class="name-error" aria-live="polite"></div>
+      <button id="startWithNameBtn" class="primary-btn" type="submit">MULAI GAME ▶</button>
+    </form>
+  </div>
+</div>
+
 <div id="gameShell" class="game-shell game-hidden">
 
   <header class="topbar preview-topbar">
@@ -22,7 +38,10 @@
       <div class="level-heading"><span id="levelText">LEVEL 1</span></div>
       <div class="subject-pill">BASIC DKV</div>
     </div>
-    
+    <div class="player-box" aria-label="Nama pemain">
+      <span class="player-label">PEMAIN</span>
+      <strong id="playerNameDisplay">-</strong>
+    </div>
   </header>
 
   <nav id="levelNav" class="level-nav" aria-label="Pilih level">
@@ -68,6 +87,17 @@
         <div><span>☷</span><b>CLUE</b><strong id="progress">0/8</strong></div>
         <div><span>◷</span><b>TIME</b><strong id="time">05:00</strong></div>
       </div>
+
+      <section class="leaderboard-card" aria-labelledby="leaderboardTitle">
+        <div class="leaderboard-heading">
+          <div>🏆</div>
+          <div>
+            <strong id="leaderboardTitle">LEADERBOARD</strong>
+            <span>TOP 5 SKOR TERTINGGI</span>
+          </div>
+        </div>
+        <ol id="leaderboardList" class="leaderboard-list" aria-live="polite"></ol>
+      </section>
     </div>
   </section>
 
