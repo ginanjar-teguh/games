@@ -107,7 +107,7 @@ const LEVELS_DATA=[
   this.size=15;this.levelIndex=0;this.score=0;this.gems=250;this.correct=0;this.attempts=0;this.totalCorrect=0;this.totalAttempts=0;this.active=null;this.pos=0;this.remaining=300;this.letters={};
   const playerDisplay=document.getElementById("playerNameDisplay");
   if(playerDisplay) playerDisplay.textContent=this.playerName;
-  this.renderKeyboard();this.bind();this.bindLevelButtons();this.loadLevel();
+  this.bind();this.bindLevelButtons();this.loadLevel();
   this.renderLeaderboard();
   renderWelcomeTopScore();
  }
@@ -317,34 +317,6 @@ const LEVELS_DATA=[
    return this.words.length>0 && this.words.every(w=>this.isWordCorrect(w));
  }
  updateStats(){document.getElementById("score").textContent=this.score;document.getElementById("accuracy").textContent=(this.attempts?Math.round(this.correct/this.attempts*100):0)+"%";document.getElementById("progress").textContent=`${this.correct}/${this.words.length}`}
- renderKeyboard(){
-  const el=document.getElementById("keyboard");
-  el.innerHTML="";
-  const rows=["QWERTYUIOP","ASDFGHJKL","ZXCVBNM"];
-  rows.forEach(row=>{
-    const rowEl=document.createElement("div");
-    rowEl.className="keyboard-row";
-    row.split("").forEach(ch=>{
-      const b=document.createElement("button");
-      b.type="button";
-      b.textContent=ch;
-      b.dataset.key=ch;
-
-      // Efek tombol ditekan dengan mouse/touch.
-      b.addEventListener("pointerdown",()=>{
-        b.classList.add("key-pressed");
-        playSound("click");
-      });
-      ["pointerup","pointercancel","pointerleave"].forEach(evt=>{
-        b.addEventListener(evt,()=>b.classList.remove("key-pressed"));
-      });
-
-      b.onclick=()=>this.type(ch);
-      rowEl.appendChild(b);
-    });
-    el.appendChild(rowEl);
-  });
-}
  bindLevelButtons(){
   document.querySelectorAll(".level-btn").forEach((btn)=>{
     btn.addEventListener("click",()=>{
@@ -354,21 +326,22 @@ const LEVELS_DATA=[
   });
  }
  bind(){
-  document.getElementById("checkBtn").onclick=()=>this.check();document.getElementById("eraseBtn").onclick=()=>this.erase();document.getElementById("hintBtn").onclick=()=>this.hint();document.getElementById("shuffleBtn").onclick=()=>this.shuffle();
-  
+  document.getElementById("checkBtn").onclick=()=>this.check();
+  document.getElementById("eraseBtn").onclick=()=>this.erase();
+  document.getElementById("hintBtn").onclick=()=>this.hint();
+  document.getElementById("shuffleBtn").onclick=()=>this.shuffle();
+
+  // Keyboard fisik tetap didukung untuk pengguna komputer.
   document.addEventListener("keydown",e=>{
+    const target=e.target;
+    const typingField=target && (target.matches?.("input,textarea,select") || target.isContentEditable);
+    if(typingField)return;
     if(/^[a-z]$/i.test(e.key)){
-      const key=e.key.toUpperCase();
-      const btn=document.querySelector(`.keyboard button[data-key="${key}"]`);
-      if(btn){
-        btn.classList.add("key-pressed");
-        clearTimeout(btn._pressTimer);
-        btn._pressTimer=setTimeout(()=>btn.classList.remove("key-pressed"),120);
-      }
-      this.type(key);
+      this.type(e.key.toUpperCase());
+      return;
     }
-    if(e.key==="Backspace")this.erase();
-    if(e.key==="Enter")this.check();
+    if(e.key==="Backspace"){e.preventDefault();this.erase();return;}
+    if(e.key==="Enter"){e.preventDefault();this.check();}
   });
  }
  timer(){
@@ -528,13 +501,16 @@ window.addEventListener("DOMContentLoaded",()=>{
   const shell=document.getElementById("gameShell");
   const enter=document.getElementById("enterGameBtn");
   const nameOverlay=document.getElementById("nameOverlay");
+  const rulesOverlay=document.getElementById("rulesOverlay");
   const nameForm=document.getElementById("nameForm");
   const nameInput=document.getElementById("playerNameInput");
   const nameError=document.getElementById("nameError");
+  const startFromRulesBtn=document.getElementById("startFromRulesBtn");
   renderWelcomeTopScore();
-  if(!welcome || !shell || !enter || !nameOverlay || !nameForm || !nameInput) return;
+  if(!welcome || !shell || !enter || !nameOverlay || !rulesOverlay || !nameForm || !nameInput || !startFromRulesBtn) return;
 
   let started=false;
+  let pendingPlayerName="";
 
   const openNamePopup=()=>{
     nameOverlay.classList.remove("hidden");
@@ -542,6 +518,28 @@ window.addEventListener("DOMContentLoaded",()=>{
     nameInput.value="";
     if(nameError) nameError.textContent="";
     requestAnimationFrame(()=>nameInput.focus());
+  };
+
+  const openRulesPopup=()=>{
+    nameOverlay.classList.add("hidden");
+    nameOverlay.setAttribute("aria-hidden","true");
+    rulesOverlay.classList.remove("hidden");
+    rulesOverlay.setAttribute("aria-hidden","false");
+    requestAnimationFrame(()=>startFromRulesBtn.focus());
+  };
+
+  const startGame=()=>{
+    if(started)return;
+    started=true;
+    startBGM();
+    rulesOverlay.classList.add("hidden");
+    rulesOverlay.setAttribute("aria-hidden","true");
+    welcome.classList.add("welcome-exit");
+    setTimeout(()=>{
+      welcome.style.display="none";
+      shell.classList.remove("game-hidden");
+      new VisualCross(pendingPlayerName);
+    },320);
   };
 
   enter.addEventListener("click",()=>{
@@ -558,26 +556,16 @@ window.addEventListener("DOMContentLoaded",()=>{
       nameInput.focus();
       return;
     }
-
     if(playerName.length>24){
       if(nameError) nameError.textContent="Nama maksimal 24 karakter.";
       nameInput.focus();
       return;
     }
-
-    if(started)return;
-    started=true;
-    startBGM();
-    nameOverlay.classList.add("hidden");
-    nameOverlay.setAttribute("aria-hidden","true");
-    welcome.classList.add("welcome-exit");
-
-    setTimeout(()=>{
-      welcome.style.display="none";
-      shell.classList.remove("game-hidden");
-      new VisualCross(playerName);
-    },320);
+    pendingPlayerName=playerName;
+    openRulesPopup();
   });
+
+  startFromRulesBtn.addEventListener("click",startGame);
 
   nameInput.addEventListener("input",()=>{
     if(nameError) nameError.textContent="";
