@@ -681,3 +681,75 @@ body{min-width:0;overflow-x:hidden}
   .keyboard-actions .action-btn small{font-size:7px;}
   .keyboard-row button{font-size:12px;}
 }
+
+
+/* ===== v1.0.19 — RESPONSIVE WELCOME FOR ULTRAWIDE 2400x1080 + RULES POPUP ===== */
+.image-welcome{
+  min-height:100vh;
+  min-height:100svh;
+  background-color:#080d1b;
+  background-repeat:no-repeat;
+  background-position:center center;
+  background-size:contain;
+  aspect-ratio:auto;
+}
+.image-start-hotspot{
+  left:50%;
+  top:70%;
+  width:min(30.5vw,470px);
+  height:min(7.6vw,112px);
+  min-width:180px;
+  min-height:50px;
+}
+@media (min-aspect-ratio: 16/9){
+  .image-welcome{
+    background-size:auto 100%;
+  }
+  .image-start-hotspot{
+    top:70%;
+    width:min(19.6vh,470px);
+    height:min(6.5vh,112px);
+  }
+}
+@media (max-aspect-ratio: 16/9){
+  .image-welcome{
+    background-size:100% auto;
+  }
+}
+@media (max-width:600px){
+  .image-welcome{
+    background-size:contain;
+  }
+  .image-start-hotspot{
+    top:70%;
+    width:56vw;
+    height:12vw;
+    min-width:175px;
+    min-height:52px;
+  }
+}
+@media (max-width:600px) and (min-aspect-ratio: 16/9){
+  .image-welcome{background-size:auto 100%;}
+  .image-start-hotspot{top:70%;width:26vh;height:9vh;min-width:170px;min-height:50px;}
+}
+.rules-modal{
+  width:min(500px,92vw);
+  padding:26px 24px 22px;
+}
+.rules-modal-icon{
+  width:58px;height:58px;margin:0 auto 10px;border-radius:16px;
+  display:grid;place-items:center;background:#f7bd32;color:#172033;font-size:27px;
+}
+.rules-modal h2{margin:8px 0 16px;color:#172033;letter-spacing:.5px}
+.rules-list{text-align:left;display:grid;gap:10px;margin-bottom:20px}
+.rules-list p{margin:0;padding:11px 12px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;color:#334155;font-size:14px;line-height:1.5}
+.rules-list span{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:6px;border-radius:50%;background:#f7bd32;color:#172033;font-weight:900}
+.rules-list b{color:#172033}
+.wheel-controls{width:min(290px,100%);margin:10px auto 0}
+.wheel-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){
+  .rules-modal{padding:22px 16px 18px}
+  .rules-list p{font-size:13px;padding:10px}
+  .wheel-controls{width:min(240px,100%)}
+  .wheel-actions{gap:8px}
+}
