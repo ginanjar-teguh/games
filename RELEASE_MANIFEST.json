@@ -1,7 +1,7 @@
 {
   "name": "VISUAL CROSS",
-  "version": "1.0.13",
-  "release": "Timeout Reset Current Level",
+  "version": "1.0.16",
+  "release": "Responsive Layout + Full Column Completion Gate",
   "levels": 6,
   "question_counts": {
     "LEVEL1": 8,
@@ -30,7 +30,6 @@
     "Score",
     "Accuracy",
     "Timer",
-    "Responsive",
     "Level navigation buttons",
     "Replay completed levels",
     "DKV geometric dark theme",
@@ -43,6 +42,13 @@
     "DKV gameplay branding",
     "Working welcome start + BGM/audio feedback",
     "Keyboard press visual feedback",
-    "Timeout clears all answers and restarts current level"
+    "Timeout clears all answers and restarts current level",
+    "Fully responsive crossword, keyboard, clue, wheel, stats, and navigation layout",
+    "Dynamic letter wheel sizing for mobile and desktop",
+    "Level progression requires every crossword answer to be correctly completed",
+    "Prevents advancing when any column/clue remains unanswered",
+    "Keeps current-level reset when timer expires",
+    "Persistent top-5 leaderboard",
+    "Automatic score replacement by higher score"
   ]
 }
