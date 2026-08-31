@@ -8,6 +8,14 @@
 </head>
 <body>
 <section id="welcomeScreen" class="welcome-screen image-welcome" aria-label="Halaman Selamat Datang VISUAL CROSS">
+  <div class="welcome-top-score" id="welcomeTopScore" aria-live="polite">
+    <div class="welcome-score-icon">🏆</div>
+    <div class="welcome-score-copy">
+      <span>TOP SCORE</span>
+      <strong id="welcomeBestName">Belum ada pemain</strong>
+    </div>
+    <strong class="welcome-best-value" id="welcomeBestScore">0</strong>
+  </div>
   <button id="enterGameBtn" class="image-start-hotspot" aria-label="Mulai permainan"></button>
 </section>
 
@@ -68,17 +76,18 @@
         </div>
       </div>
 
-      <div class="keyboard" id="keyboard"></div>
+      <div class="keyboard-panel" aria-label="Keyboard permainan">
+        <div class="keyboard" id="keyboard"></div>
+        <div class="keyboard-actions" aria-label="Aksi jawaban">
+          <button class="action-btn" id="eraseBtn" type="button">⌫<small>HAPUS</small></button>
+          <button class="action-btn" id="checkBtn" type="button">✓<small>CEK</small></button>
+        </div>
+      </div>
     </div>
 
     <div class="right-column">
       <div class="letter-wheel" id="letterWheel" aria-label="Huruf jawaban">
         <button class="shuffle" id="shuffleBtn" aria-label="Acak huruf">↝</button>
-      </div>
-
-      <div class="action-row">
-        <button class="action-btn" id="eraseBtn">⌫<small>HAPUS</small></button>
-        <button class="action-btn" id="checkBtn">✓<small>CEK</small></button>
       </div>
 
       <div class="stats-card">

@@ -1,7 +1,7 @@
 {
   "name": "VISUAL CROSS",
-  "version": "1.0.16",
-  "release": "Responsive Layout + Full Column Completion Gate",
+  "version": "1.0.17",
+  "release": "Responsive Welcome + Enhanced Leaderboard",
   "levels": 6,
   "question_counts": {
     "LEVEL1": 8,
@@ -49,6 +49,10 @@
     "Prevents advancing when any column/clue remains unanswered",
     "Keeps current-level reset when timer expires",
     "Persistent top-5 leaderboard",
-    "Automatic score replacement by higher score"
+    "Automatic score replacement by higher score",
+    "Responsive image-based welcome screen across desktop, tablet, mobile, and landscape",
+    "Welcome-page live top-score display before starting",
+    "Leaderboard rank medals for top 3 players",
+    "Top-5 entry animation for new/high-scoring players"
   ]
 }

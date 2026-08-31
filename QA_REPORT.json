@@ -6,5 +6,10 @@
   ],
   "framework": "Vanilla HTML5/CSS/JS",
   "responsive": true,
-  "offline": true
+  "offline": true,
+  "version": "1.0.17",
+  "responsive_welcome": true,
+  "leaderboard_medals": true,
+  "top5_animation": true,
+  "welcome_top_score": true
 }
