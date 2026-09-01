@@ -729,23 +729,31 @@ body{min-width:0;overflow-x:hidden}
 
 /* Portrait / layar sempit: artwork tetap utuh, tombol mengikuti area tombol pada gambar. */
 @media (max-aspect-ratio:16/9){
-  .image-welcome{background-size:100% auto}
+  /* Portrait: the 16:9 artwork is letterboxed vertically by background-size:contain.
+     Calculate the hotspot from the artwork's real rendered height instead of the viewport height. */
+  .image-welcome{
+    background-size:100% auto;
+    background-position:center center;
+  }
   .image-start-hotspot{
+    left:50.6%;
+    /* rendered artwork height = 56.25vw; its center is at 50% of the screen */
+    top:calc(50% + 11.7vw);
     width:29.8vw;
     height:11.8vw;
-    top:70.8%;
   }
 }
 
 @media (max-width:600px){
   .image-welcome{
     min-height:100svh;
-    background-size:contain;
+    background-size:100% auto;
     background-position:center center;
   }
   .image-start-hotspot{
     left:50.6%;
-    top:70.8%;
+    /* Keep the click target aligned with the button inside the centered 16:9 artwork. */
+    top:calc(50% + 11.7vw);
     width:58vw;
     height:12vw;
     min-width:180px;
